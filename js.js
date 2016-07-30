@@ -85,12 +85,22 @@ var rederSpace = {
             document.getElementById("boxMonth").style.display = "block";
         });
     },
+    initCss:function(){
+        var dayList = this.getElementsByClassName(document.getElementById("reder"), "dayClass");
+        if (dayList && dayList.length > 0) {
+            for (var i = 0; i < dayList.length; i++) {
+                dayList[i].style.background = "";
+            }
+        }
+    },
     initDayEvent: function () {
         var dayList = this.getElementsByClassName(document.getElementById("reder"), "dayClass");
         if (dayList && dayList.length > 0) {
             for (var i = 0; i < dayList.length; i++) {
                 (function (i) {
                     dayList[i].addEventListener("click", function () {
+                        rederSpace.initCss();
+                        this.style.background = "blue";
                         rederSpace.rederdate = parseInt(dayList[i].innerText);
                         alert("你选中的是" + rederSpace.rederyear + "年" + rederSpace.redermonth + "月" + rederSpace.rederdate + "ri");
                     });
@@ -147,8 +157,6 @@ var rederSpace = {
             this.setAttribute("dateValue", arrayChangeYearValue);
         });
     },
-    //初始化月份选中状态
-
     //初始化年份向前选中
     initYearPrev: function (divs) {
         var yearList = this.getElementsByClassName(document.getElementById("box"), "yearClass");
@@ -239,21 +247,22 @@ var rederSpace = {
         if (!menuObj) {
             var menuDiv = document.createElement("DIV");
             menuDiv.id = "menu";
-            var menuUl = document.createElement("UL");
-            var menuLoPre = document.createElement("LI");
-            menuLoPre.style.width = "30%";
-            menuLoPre.innerHTML = "<<<<<";
+            menuDiv.className = "dataTop";
+            var menuUl = document.createElement("div");
+            menuUl.className = "dataTopChoose";
+            var menuLoPre = document.createElement("span");
+            menuLoPre.className = "icon-uniE901";
             menuLoPre.id = "prev";
-            var menuLoTitle = document.createElement("LI");
+            var menuLoTitle = document.createElement("span");
             menuLoTitle.id = "monthYear";
-            var strYear = '<table style="width:100%;"><tr>';
+            menuLoTitle.className = 'dataTopToday';
+            var strYear = '<table style="width:100%; height:100%;"><tr>';
             strYear += '<td id="year"></td>';
             strYear += '<td id="month"></td>';
-            strYear += "</tr><table>";
+            strYear += "</tr></table>";
             menuLoTitle.innerHTML = strYear;
-            var menuLoNext = document.createElement("LI");
-            menuLoNext.style.width = "30%";
-            menuLoNext.innerHTML = ">>>>>";
+            var menuLoNext = document.createElement("span");
+            menuLoNext.className = "icon-uniE90B";
             menuLoNext.id = "next";
             var rederDiv = document.createElement("DIV");
             rederDiv.id = "reder";
@@ -263,44 +272,57 @@ var rederSpace = {
             menuDiv.appendChild(menuUl);
             menuDiv.appendChild(rederDiv);
             divs.appendChild(menuDiv);
-        }//创建选中的年
-
+        }
     },
-    print: function () {
-        var strHtml = "";
-        strHtml += "<table>";
-        strHtml += "<tr style='color:red'><td>星期天</td><td>星期一</td><td>星期二</td><td>星期三</td><td>星期四</td><td>星期五</td><td>星期6</td></tr>";
-        var days = this.currayDays[this.redermonth - 1];
+    //获取星期六
+    getDays: function () {
+        var currentD = "-01";
+        if (arguments && arguments.length > 0) {
+            var ar1 = parseInt(arguments[0]);
+            if (ar1 < 10) {
+                currentD = "-0" + ar1;
+            } else {
+                currentD = "-" + ar1;
+            }
+        }
         var tt = this.redermonth;
         if (this.redermonth < 10) {
             tt = "0" + this.redermonth;
         }
-        var theMonthFirstFullDay = this.rederyear + "-" + tt + "-01";
+        var theMonthFirstFullDay = this.rederyear + "-" + tt + currentD;
         var day = new Date(Date.parse(theMonthFirstFullDay.replace(/-/g, '/'))); //将日期值格式化
-        var stadates = day.getDay()//
-        strHtml += "<tr>";
+        return day.getDay();
+    },
+    print: function () {
+        var strHtml = "";
+        strHtml += "<ul class='dataTopWeek'>";
+        strHtml += "<li style='color:red'>日</li><li>一</li><li>二</li><li>三</li><li>四</li><li>五</li><li style='color:red'>六</li></ul>";
+        var days = this.currayDays[this.redermonth - 1];
+        var stadates = this.getDays();
+        strHtml += '<ul class="dataTopDay">';
         var k = 0;
         if (stadates > 0) {
             for (k = 0; k < stadates; k++) {
-                strHtml += "<td ></td>";
+                strHtml += '<li class="dayClass"><p>#</p><span></span></li>';
             }
         }
         for (var j = 0; j < days; j++) {
+            var isSundayOrSaturday = this.getDays(j+1);
             var m = j + k;
-            if (m % 7 == 0 && m !== 0) {
-                strHtml += "<tr>"
+            if (m != 0 && (m % 7) == 0) {
+                strHtml += '</ul><ul class="dataTopDay">';
             }
             if (this.rederdate == (j + 1)) {
-                strHtml += "<td style='color:red' class='dayClass'>" + (j + 1) + "</td>";
+                strHtml += '<li class="dayClass" style="background-color:blue"><p>' + (j + 1) + '</p><span></span></li>';
             } else {
-                strHtml += "<td class='dayClass'>" + (j + 1) + "</td>";
-            }
-
-            if (m % 7 + 1 == 0 && m !== 0) {
-                strHtml += "</tr>"
+                if (isSundayOrSaturday == 0 || isSundayOrSaturday == 6) {
+                    strHtml += '<li class="dayClass" style="color:red"><p>' + (j + 1) + '</p><span></span></li>';
+                } else {
+                    strHtml += '<li class="dayClass"><p>' + (j + 1) + '</p><span></span></li>';
+                }
             }
         }
-        strHtml += "</tr></table>";
+        strHtml += "</ul>";
         return strHtml;
     },
     //根据className获取元素
