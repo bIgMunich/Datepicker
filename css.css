@@ -1,0 +1,62 @@
+<style type="text/css">
+    td {
+        width: 60px;
+    }
+
+    #menu ul {
+        width: 100%;
+        height: auto;
+        float: left;
+        text-align: center;
+    }
+
+        #menu ul li {
+            float: left;
+        }
+
+    #menu {
+        width: 500px;
+    }
+
+    #reder {
+        width: 100%;
+        float: left;
+        text-align: center;
+    }
+
+    .box {
+        width: 350px;
+        height: 300px;
+        background: #999;
+        padding-top: 20px;
+        padding-left: 60px;
+        display: none;
+        z-index: 999;
+        position: absolute;
+    }
+
+        .box li {
+            float: left;
+            list-style: none;
+        }
+
+            .box li a {
+                border: 5px solid #aaa;
+                display: block;
+                width: 100px;
+                height: 60px;
+                text-decoration: none;
+                margin: 0 0 -5px -5px;
+                position: relative;
+                z-index: 0;
+                text-align: center;
+                line-height: 60px;
+                color: #fff;
+                font-size: 30px;
+            }
+
+                .box li a:hover {
+                    border: 5px solid #333;
+                    z-index: 1;
+                }
+</style>
