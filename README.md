@@ -11,4 +11,7 @@
 </script>
 ```
 ####2. 日期控件截图
-![选择年份](http://img.blog.csdn.net/20160730155744628)
+
+![选择年份](http://img.blog.csdn.net/20160730161447749)  
+![选择月份](http://img.blog.csdn.net/20160730161526417)  
+![当前日期](http://img.blog.csdn.net/20160730161727170)   
